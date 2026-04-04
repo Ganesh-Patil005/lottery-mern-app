@@ -20,13 +20,16 @@ const app = express()
 
 // ✅ Fix CORS — allow all origins for now
 app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: 'https://lottery-mern-app.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }))
-
 // Handle preflight requests
-app.options('*', cors())
+// app.use(cors({
+//   origin: 'https://lottery-mern-app.vercel.app',
+//   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+//   credentials: true
+// }))
 
 app.use(helmet({ crossOriginResourcePolicy: false }))
 app.use(morgan('dev'))
