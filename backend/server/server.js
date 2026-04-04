@@ -20,7 +20,21 @@ const app = express()
 
 // Middleware
 app.use(helmet())
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowed = [
+      process.env.CLIENT_URL,
+      process.env.CLIENT_URL?.replace(/\/$/, ''), // without trailing slash
+      'http://localhost:5173'
+    ]
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}))
 app.use(morgan('dev'))
 app.use(express.json())
 
