@@ -18,23 +18,17 @@ connectDB()
 
 const app = express()
 
-// Middleware
-app.use(helmet())
+// ✅ Fix CORS — allow all origins for now
 app.use(cors({
-  origin: (origin, callback) => {
-    const allowed = [
-      process.env.CLIENT_URL,
-      process.env.CLIENT_URL?.replace(/\/$/, ''), // without trailing slash
-      'http://localhost:5173'
-    ]
-    if (!origin || allowed.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }))
+
+// Handle preflight requests
+app.options('*', cors())
+
+app.use(helmet({ crossOriginResourcePolicy: false }))
 app.use(morgan('dev'))
 app.use(express.json())
 
